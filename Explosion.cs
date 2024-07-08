@@ -6,9 +6,11 @@ public class Explosion : MonoBehaviour
     [SerializeField] private float _explosionRadius = 5f;
 
     private float _cubeScale = 0.7f;
+
     private int _maxSpawnValue = 3;
-    private float _spawnChance = 0.4f;
     private int _currentSpawnValue = 0;
+
+    private float _spawnChance = 0.4f;
     private int _maxSpawnCubes = 6;
     private int _minSpawnCubes = 2;
 
@@ -17,9 +19,9 @@ public class Explosion : MonoBehaviour
         Explode();
     }
 
-    private void SetDepth(int depth)
+    private void SetDepth(int spawnValue)
     {
-        _currentSpawnValue = depth;
+        _currentSpawnValue = spawnValue;
     }
 
     private void Explode()
@@ -28,6 +30,7 @@ public class Explosion : MonoBehaviour
 
         if (_currentSpawnValue >= _maxSpawnValue)
         {
+            Destroy(gameObject);
             return;
         }
 
@@ -45,14 +48,14 @@ public class Explosion : MonoBehaviour
                 Rigidbody rigidBody = cube.AddComponent<Rigidbody>();
                 rigidBody.AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
 
-                Explosion smallSpawnCube = cube.AddComponent<Explosion>();
-                smallSpawnCube._maxSpawnCubes = _maxSpawnCubes;
-                smallSpawnCube._explosionForce = _explosionForce;
-                smallSpawnCube._explosionRadius = _explosionRadius;
-                smallSpawnCube._cubeScale = _cubeScale * 0.5f;
-                smallSpawnCube.SetDepth(_currentSpawnValue + 1);
-                smallSpawnCube._maxSpawnValue = _maxSpawnValue;
-                smallSpawnCube._spawnChance = _spawnChance;
+                Explosion explodingCube = cube.AddComponent<Explosion>();
+                explodingCube._maxSpawnCubes = _maxSpawnCubes;
+                explodingCube._explosionForce = _explosionForce;
+                explodingCube._explosionRadius = _explosionRadius;
+                explodingCube._cubeScale = _cubeScale * 0.5f;
+                explodingCube._maxSpawnValue = _maxSpawnValue;
+                explodingCube._spawnChance = _spawnChance;
+                explodingCube.SetDepth(_currentSpawnValue + 1);
             }
         }
 
